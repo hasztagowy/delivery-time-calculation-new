@@ -1,2 +1,4 @@
-package com.studenci.apkameta.modules;public class ModuleControler {
+package com.studenci.apkameta.modules;
+
+public class ModuleControler {
 }
