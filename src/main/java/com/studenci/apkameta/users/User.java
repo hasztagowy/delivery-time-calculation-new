@@ -9,10 +9,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String login;
+    private String username;
     private String password;
-    @ManyToOne
-    private UserRole role;
+//    @ManyToOne
+//    private UserRole role;
 
 
     public Long getId() {
@@ -23,12 +23,12 @@ public class User {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -39,11 +39,11 @@ public class User {
         this.password = password;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
+//    public UserRole getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(UserRole role) {
+//        this.role = role;
+//    }
 }

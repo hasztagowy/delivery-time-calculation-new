@@ -1,2 +1,6 @@
-package com.studenci.apkameta.users;public enum Role {
+package com.studenci.apkameta.users;
+
+public enum Role {
+    ADMIN,
+    USER
 }
