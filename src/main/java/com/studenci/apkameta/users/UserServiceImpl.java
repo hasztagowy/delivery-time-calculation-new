@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
+        user.setRole(Role.ADMIN);
         userDto.save(user);
         return user;
     }

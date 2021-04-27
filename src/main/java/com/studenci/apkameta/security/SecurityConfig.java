@@ -1,6 +1,7 @@
 package com.studenci.apkameta.security;
 
 
+import com.studenci.apkameta.users.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/authorize").anonymous()
-                .antMatchers("/modules").hasRole("ADMIN")
+                .antMatchers("/modules").anonymous()
                 .antMatchers("/reg").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .antMatchers("/console/**").permitAll()
