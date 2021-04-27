@@ -11,8 +11,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-//    @ManyToOne
-//    private UserRole role;
+    private Role role;
 
 
     public Long getId() {
@@ -39,11 +38,11 @@ public class User {
         this.password = password;
     }
 
-//    public UserRole getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(UserRole role) {
-//        this.role = role;
-//    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
