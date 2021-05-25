@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public interface ModuleService {
 
     boolean verify(LoginDto user);
+    void createModule(Module module);
 }
