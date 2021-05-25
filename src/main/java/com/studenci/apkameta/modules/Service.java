@@ -1,5 +1,7 @@
 package com.studenci.apkameta.modules;
 
+import com.studenci.apkameta.transit.TransitTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
