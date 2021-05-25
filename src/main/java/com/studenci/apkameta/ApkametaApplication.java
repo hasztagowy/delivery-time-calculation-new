@@ -18,7 +18,7 @@ public class ApkametaApplication {
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new JwtFilter());
-        filterRegistrationBean.setUrlPatterns(Collections.singleton("/user/*"));
+        filterRegistrationBean.setUrlPatterns(Collections.singleton("/modules/*"));
         return filterRegistrationBean;
     }
 
