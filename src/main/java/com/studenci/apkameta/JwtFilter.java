@@ -1,5 +1,6 @@
 package com.studenci.apkameta;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
@@ -18,15 +19,19 @@ public class JwtFilter implements javax.servlet.Filter {
 
         String header = httpServletRequest.getHeader("authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new ServletException("Missing or invalid Authorization header");
+        if (httpServletRequest == null || !header.startsWith("Bearer ")){
+            throw new ServletException("Wrong or empty header.");
         } else {
+            Claims claims;
             try {
                 String token = header.substring(7);
-                Claims claims = Jwts.parser().setSigningKey("byku123").parseClaimsJws(token).getBody();
+                claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
                 servletRequest.setAttribute("claims", claims);
-            } catch (final SignatureException e) {
-                throw new ServletException("Invalid token");
+            } catch (Exception e) {
+                throw new ServletException("Wrong key");
+            }
+            if (!claims.get("role").equals("ADMIN")){
+                throw new ServletException("Wrong role.");
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
