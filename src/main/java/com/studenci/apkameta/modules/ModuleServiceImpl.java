@@ -39,4 +39,10 @@ public class ModuleServiceImpl implements ModuleService {
 
         return  true;
     }
+
+    @Override
+    public void createModule(Module module) {
+        
+    }
+
 }
