@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ModuleControler {
-//    @Autowired
-//    ModuleServiceImpl moduleService;
-//
+
+    @Autowired
+    ModuleServiceImpl moduleService;
+
 //    @PostMapping(value = "/modules")
 //    public void modules(@RequestBody LoginDto user){
 //        if (moduleService.verify(user))
@@ -23,5 +24,10 @@ public class ModuleControler {
     @GetMapping("/modules")
     public String hello(){
         return "hello";
+    }
+
+    @PostMapping("/modules")
+    public String createModule(@RequestBody Module module){
+        return moduleService.createModule(module);
     }
 }
