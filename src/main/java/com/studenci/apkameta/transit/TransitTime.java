@@ -1,29 +1,31 @@
 package com.studenci.apkameta.transit;
 
+import com.google.gson.GsonBuilder;
+
 public class TransitTime {
 
-    private String fromCountry;
-    private String toCountry;
+    private String from;
+    private String to;
 
     private TransitTimeAvailability Dispatch;
     private TransitTimeAvailability Transit;
     private TransitTimeAvailability Delivery;
 
 
-    public String getFromCountry() {
-        return fromCountry;
+    public String getFrom() {
+        return from;
     }
 
-    public void setFromCountry(String fromCountry) {
-        this.fromCountry = fromCountry;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
-    public String getToCountry() {
-        return toCountry;
+    public String getTo() {
+        return to;
     }
 
-    public void setToCountry(String toCountry) {
-        this.toCountry = toCountry;
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public TransitTimeAvailability getDispatch() {
@@ -48,5 +50,10 @@ public class TransitTime {
 
     public void setDelivery(TransitTimeAvailability delivery) {
         Delivery = delivery;
+    }
+
+    @Override
+    public String toString() {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
     }
 }
