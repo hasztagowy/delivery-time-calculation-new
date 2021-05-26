@@ -41,8 +41,9 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public void createModule(Module module) {
-        
+    public String createModule(Module module) {
+//        System.out.println(module);
+        return module.toString();
     }
 
 }
