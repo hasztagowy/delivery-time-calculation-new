@@ -15,11 +15,19 @@ public class ApkametaApplication {
     }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new JwtFilter());
-        filterRegistrationBean.setUrlPatterns(Collections.singleton("/modules/*"));
-        return filterRegistrationBean;
+    public FilterRegistrationBean filterForModules() {
+        FilterRegistrationBean filterForModules = new FilterRegistrationBean();
+        filterForModules.setFilter(new JwtFilterModules());
+        filterForModules.setUrlPatterns(Collections.singleton("/modules/*"));
+        return filterForModules;
     }
+
+//    @Bean
+//    public FilterRegistrationBean filterForTransitTime() {
+//        FilterRegistrationBean filterForTransitTime = new FilterRegistrationBean();
+//        filterForTransitTime.setFilter(new JwtFilter());
+//        filterForTransitTime.setUrlPatterns(Collections.singleton("/{moduleCode}/*"));
+//        return filterForTransitTime;
+//    }
 
 }
