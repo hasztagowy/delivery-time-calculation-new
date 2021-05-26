@@ -38,7 +38,7 @@ public class UserControler {
                     .setSubject(user.getUsername())
                     .claim("role", user1.getRole())
                     .setIssuedAt(new Date(currentTimeMillis))
-                    .setExpiration(new Date(currentTimeMillis + 20000))
+                    .setExpiration(new Date(currentTimeMillis + 40000))
                     .signWith(SignatureAlgorithm.HS512, "secretkey").compact(); // 5
         }
         return "blad";
