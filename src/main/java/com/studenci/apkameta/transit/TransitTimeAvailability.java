@@ -1,5 +1,7 @@
 package com.studenci.apkameta.transit;
 
+import com.google.gson.GsonBuilder;
+
 public class TransitTimeAvailability {
 
     public int Duration;
@@ -81,5 +83,10 @@ public class TransitTimeAvailability {
 
     public void setSunday(boolean sunday) {
         IsSunday = sunday;
+    }
+
+    @Override
+    public String toString() {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
     }
 }
