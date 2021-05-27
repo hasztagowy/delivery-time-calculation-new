@@ -1,7 +1,6 @@
 package com.studenci.apkameta.transit;
 
 import com.studenci.apkameta.modules.Module;
-import com.studenci.apkameta.modules.Service;
 import com.studenci.apkameta.users.UserControler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
