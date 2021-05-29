@@ -1,8 +1,6 @@
 package com.studenci.apkameta;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
