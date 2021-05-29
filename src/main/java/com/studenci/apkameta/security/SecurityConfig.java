@@ -38,9 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/reg").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .antMatchers("/console/**").permitAll()
-                .antMatchers("/DHL/**").permitAll()
-                .antMatchers("/GLS/**").permitAll()
+                .antMatchers("/{code}/transitTimes**").permitAll()
                 .anyRequest().authenticated();
         // ...
     }
 }
+
