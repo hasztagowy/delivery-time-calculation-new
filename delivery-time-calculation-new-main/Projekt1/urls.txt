@@ -1,0 +1,3 @@
+Authorize -> Post -> localhost:port/authorize/ {admin, user}
+Create module -> POST -> localhost:port/modules/
+GetTranitTime -> Get -> localhost:port/{moduleCode}/transitTimes?serviceName=OneDay&purchaseDate=14042021T1046&fromCountry=PL&toCountry=DE
