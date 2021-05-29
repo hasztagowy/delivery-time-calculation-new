@@ -2,9 +2,31 @@ package com.studenci.apkameta.transit;
 
 import com.google.gson.GsonBuilder;
 
-public class TransitTimeAvailability {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
+public class TransitTimeAvailability {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     public int Duration;
+
+    public TransitTimeAvailability() {
+    }
+
+    public TransitTimeAvailability(int duration, boolean isMonday, boolean isTuesday, boolean isWednesday, boolean isThursday, boolean isFriday, boolean isSaturday, boolean isSunday) {
+        Duration = duration;
+        IsMonday = isMonday;
+        IsTuesday = isTuesday;
+        IsWednesday = isWednesday;
+        IsThursday = isThursday;
+        IsFriday = isFriday;
+        IsSaturday = isSaturday;
+        IsSunday = isSunday;
+    }
 
     public boolean IsMonday;
 
@@ -19,7 +41,6 @@ public class TransitTimeAvailability {
     public boolean IsSaturday;
 
     public boolean IsSunday;
-
 
     public int getDuration() {
         return Duration;
@@ -90,3 +111,4 @@ public class TransitTimeAvailability {
         return new GsonBuilder().setPrettyPrinting().create().toJson(this);
     }
 }
+
