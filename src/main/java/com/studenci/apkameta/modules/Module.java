@@ -18,11 +18,12 @@ public class Module {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
-    @OneToOne(cascade = {CascadeType.ALL})
-    private DeliveryWindow deliveryWindow;
 
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Service> services = new ArrayList<>();
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    private DeliveryWindow deliveryWindow;
 
     public Module() {
     }
