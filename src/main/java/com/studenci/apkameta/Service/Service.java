@@ -18,11 +18,12 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
 
     @OneToMany(cascade = {CascadeType.ALL})
     private List<TransitTime> transitTimes = new ArrayList<>();
 
-    private String name;
+
 
     public Service() {
     }
