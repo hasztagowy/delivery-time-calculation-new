@@ -1,14 +1,9 @@
 package com.studenci.apkameta.transit;
 
-import com.studenci.apkameta.Service.Service;
+import com.studenci.apkameta.DeliveryWindow.DeliveryWindow;
 import com.studenci.apkameta.Service.ServiceServiceImpl;
 import com.studenci.apkameta.modules.Module;
-import com.studenci.apkameta.modules.ModuleEntityRepository;
 import com.studenci.apkameta.modules.ModuleEntityRepositoryImpl;
-import com.studenci.apkameta.users.UserControler;
-import org.hibernate.exception.DataException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
@@ -24,7 +19,8 @@ public class TransitTimeController {
 
     ModuleEntityRepositoryImpl moduleEntityRepositoryImpl;
     ServiceServiceImpl serviceServiceImpl;
-    public TransitTimeController(ModuleEntityRepositoryImpl moduleEntityRepositoryImpl, ServiceServiceImpl serviceServiceImpl){
+    public TransitTimeController(ModuleEntityRepositoryImpl moduleEntityRepositoryImpl,
+                                 ServiceServiceImpl serviceServiceImpl){
         this.moduleEntityRepositoryImpl = moduleEntityRepositoryImpl;
         this.serviceServiceImpl = serviceServiceImpl;
     }
@@ -33,49 +29,51 @@ public class TransitTimeController {
 
 
     @GetMapping("/{moduleCode}/transitTimes")
-    public List<Date> getCode(@PathVariable("moduleCode") String moduleCode, @RequestParam String serviceName,
-                              @RequestParam String pucharseDate, ){
+    public String getCode(@PathVariable("moduleCode") String moduleCode, @RequestParam String serviceName,
+                          @RequestParam String purchaseDate, @RequestParam String fromCountry, @RequestParam String toCountry){
 
         Module module = moduleEntityRepositoryImpl.getModuleByCode(moduleCode);
-        Service service = serviceServiceImpl.getServiceByName(serviceName);
-        Date date = stringToDate(pucharseDate);
+        TransitTime transitTimeObject = serviceServiceImpl.getTransitTimes(fromCountry, toCountry);
+        Date date = stringToDate(purchaseDate);
+        DeliveryWindow deliveryWindow = module.getDeliveryWindow();
 
-        boolean[] availabilityDispatch = {service.getTransitTimes().get(0).getDispatch().isSunday(),
-                service.getTransitTimes().get(0).getDispatch().isMonday(),
-                service.getTransitTimes().get(0).getDispatch().isTuesday(),
-                service.getTransitTimes().get(0).getDispatch().isWednesday(),
-                service.getTransitTimes().get(0).getDispatch().isThursday(),
-                service.getTransitTimes().get(0).getDispatch().isFriday(),
-                service.getTransitTimes().get(0).getDispatch().isSaturday()};
+        boolean[] availabilityDispatch = {transitTimeObject.getDispatch().isSunday(),
+                transitTimeObject.getDispatch().isMonday(),
+                transitTimeObject.getDispatch().isTuesday(),
+                transitTimeObject.getDispatch().isWednesday(),
+                transitTimeObject.getDispatch().isThursday(),
+                transitTimeObject.getDispatch().isFriday(),
+                transitTimeObject.getDispatch().isSaturday()};
 
-        boolean[] availabilityTransit = {service.getTransitTimes().get(0).getTransit().isSunday(),
-                service.getTransitTimes().get(0).getTransit().isMonday(),
-                service.getTransitTimes().get(0).getTransit().isTuesday(),
-                service.getTransitTimes().get(0).getTransit().isWednesday(),
-                service.getTransitTimes().get(0).getTransit().isThursday(),
-                service.getTransitTimes().get(0).getTransit().isFriday(),
-                service.getTransitTimes().get(0).getTransit().isSaturday()};
+        boolean[] availabilityTransit = {transitTimeObject.getTransit().isSunday(),
+                transitTimeObject.getTransit().isMonday(),
+                transitTimeObject.getTransit().isTuesday(),
+                transitTimeObject.getTransit().isWednesday(),
+                transitTimeObject.getTransit().isThursday(),
+                transitTimeObject.getTransit().isFriday(),
+                transitTimeObject.getTransit().isSaturday()};
 
-        boolean[] availabilityDelivery = {service.getTransitTimes().get(0).getDelivery().isSunday(),
-                service.getTransitTimes().get(0).getDelivery().isMonday(),
-                service.getTransitTimes().get(0).getDelivery().isTuesday(),
-                service.getTransitTimes().get(0).getDelivery().isWednesday(),
-                service.getTransitTimes().get(0).getDelivery().isThursday(),
-                service.getTransitTimes().get(0).getDelivery().isFriday(),
-                service.getTransitTimes().get(0).getDelivery().isSaturday()};
+        boolean[] availabilityDelivery = {transitTimeObject.getDelivery().isSunday(),
+                transitTimeObject.getDelivery().isMonday(),
+                transitTimeObject.getDelivery().isTuesday(),
+                transitTimeObject.getDelivery().isWednesday(),
+                transitTimeObject.getDelivery().isThursday(),
+                transitTimeObject.getDelivery().isFriday(),
+                transitTimeObject.getDelivery().isSaturday()};
 
-        int dispatchTime = service.getTransitTimes().get(0).getDispatch().getDuration();
-
-        int transitTime = service.getTransitTimes().get(0).getTransit().getDuration();
-
-        int deliveryTime = service.getTransitTimes().get(0).getDelivery().getDuration();
-
-        System.out.println("Dispatch time: "+dispatchTime+"\nTransit time: "+transitTime+"\nDelivery time: "+deliveryTime);
-
+        int dispatchTime = transitTimeObject.getDispatch().getDuration();
+        int transitTime = transitTimeObject.getTransit().getDuration();
+        int deliveryTime = transitTimeObject.getDelivery().getDuration();
         List<Date> deliveryDates = new ArrayList<>();
+        boolean hourCheck = false;
 
         while (dispatchTime > 0){
-            System.out.println("Dispatch time: "+dispatchTime);
+            if ((date.getHours() > Integer.parseInt(module.getDeliveryWindow().getToH())) && !hourCheck){
+                date.setDate(date.getDate() + 1);
+                date.setHours(Integer.parseInt(module.getDeliveryWindow().getToH()));
+                date.setMinutes(Integer.parseInt(module.getDeliveryWindow().getToM()));
+                hourCheck = true;
+            }
             if (availabilityDispatch[date.getDay()] && dispatchTime>0) {
                 date.setDate(date.getDate()+1);
                 dispatchTime--;
@@ -86,8 +84,13 @@ public class TransitTimeController {
 
         while (transitTime >= 0){
             if (availabilityTransit[date.getDay()] && transitTime>=0) {
-                deliveryDates.add(new Date(date.getYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()));
-                System.out.println(date);
+                if (transitTime == transitTimeObject.getTransit().getDuration()){
+                    deliveryDates.add(new Date(date.getYear(), date.getMonth(), date.getDate(),
+                            Integer.parseInt(module.getDeliveryWindow().getFromH()), Integer.parseInt(module.getDeliveryWindow().getFromM())));
+                } else {
+                    deliveryDates.add(new Date(date.getYear(), date.getMonth(), date.getDate(),
+                            Integer.parseInt(module.getDeliveryWindow().getToH()), Integer.parseInt(module.getDeliveryWindow().getToM())));
+                }
                 date.setDate(date.getDate()+1);
                 transitTime--;
             } else {
@@ -95,20 +98,44 @@ public class TransitTimeController {
             }
         }
 
-        for (int i=0; i<deliveryDates.size(); i++){
-            while(deliveryTime > 0){
-                if (availabilityDelivery[deliveryDates.get(i).getDay()] && deliveryTime>0) {
-                    System.out.println(deliveryDates.get(i));
-                    deliveryDates.get(i).setDate(deliveryDates.get(i).getDate()+1);
+        for (int i=0; i<deliveryDates.size(); i++) {
+            while (deliveryTime >= 0) {
+                if (availabilityDelivery[deliveryDates.get(i).getDay()] && deliveryTime > 0) {
+                    deliveryDates.get(i).setDate(deliveryDates.get(i).getDate() + 1);
                     deliveryTime--;
+                } else if (availabilityDelivery[deliveryDates.get(i).getDay()] && deliveryTime == 0) {
+                    break;
                 } else {
-                    deliveryDates.get(i).setDate(deliveryDates.get(i).getDate()+1);
+                    deliveryDates.get(i).setDate(deliveryDates.get(i).getDate() + 1);
                 }
             }
-            deliveryTime = service.getTransitTimes().get(0).getDelivery().getDuration();
+            deliveryTime = transitTimeObject.getDelivery().getDuration();
         }
 
-        return deliveryDates;
+        List<String> deliveryDatesFrom = new ArrayList<>();
+        List<String> deliveryDatesTo = new ArrayList<>();
+
+        for (int i=0; i<deliveryDates.size(); i++) {
+            deliveryDates.get(i).setHours(Integer.parseInt(deliveryWindow.getFromH()));
+            deliveryDates.get(i).setMinutes(Integer.parseInt(deliveryWindow.getFromM()));
+            deliveryDatesFrom.add(dateToString(deliveryDates.get(i)));
+        }
+
+        for (int i=0; i<deliveryDates.size(); i++) {
+            deliveryDates.get(i).setHours(Integer.parseInt(deliveryWindow.getToH()));
+            deliveryDates.get(i).setMinutes(Integer.parseInt(deliveryWindow.getToM()));
+            deliveryDatesTo.add(dateToString(deliveryDates.get(i)));
+        }
+
+        List<PredictableDate> predictableDate = new ArrayList<>();
+
+        for (int i=0; i<deliveryDates.size(); i++) {
+            predictableDate.add(new PredictableDate(deliveryDatesFrom.get(i), deliveryDatesTo.get(i)));
+        }
+
+        PredictableDates predictableDates = new PredictableDates(purchaseDate, predictableDate);
+
+        return predictableDates.toString();
     }
 
 
@@ -128,7 +155,25 @@ public class TransitTimeController {
                 minute += stringDate.charAt(i);
         }
 
-        Date newDate = new Date(Integer.parseInt(year)-1900, Integer.parseInt(month)-1, Integer.parseInt(day)+0, Integer.parseInt(hour), Integer.parseInt(minute), Integer.parseInt(day));
-        return newDate;
+        return new Date(Integer.parseInt(year)-1900, Integer.parseInt(month)-1, Integer.parseInt(day)+0, Integer.parseInt(hour), Integer.parseInt(minute), Integer.parseInt(day));
+    }
+
+    public String dateToString(Date date) {
+
+        if (date.getMonth()<9 && date.getDate()<10 && date.getHours()<10) {
+            return "0" + date.getDate() + "0" + (date.getMonth()+1) + (date.getYear()+1900) + "T0" + date.getHours() + date.getMinutes() + "0";
+        } else if (date.getDate()<10 && date.getHours()<10) {
+            return "0" + date.getDate() + (date.getMonth()+1) + (date.getYear()+1900) + "T0" + date.getHours() + date.getMinutes() + "0";
+        } else if (date.getMonth()<9 && date.getHours()<10){
+            return date.getDate() + "0" + (date.getMonth()+1) + (date.getYear()+1900) + "T0" + date.getHours() + date.getMinutes() + "0";
+        } else if (date.getMonth()<9){
+            return date.getDate() + "0" + (date.getMonth()+1) + (date.getYear()+1900) + "T" + date.getHours() + date.getMinutes() + "0";
+        } else if (date.getDate()<10){
+            return "0" + date.getDate() + (date.getMonth()+1) + (date.getYear()+1900) + "T0" + date.getHours() + date.getMinutes() + "0";
+        } else if (date.getHours()<10){
+            return "" + date.getDate() + (date.getMonth()+1) + (date.getYear()+1900) + "T0" + date.getHours() + date.getMinutes() + "0";
+        } else {
+            return "" + date.getDate() + (date.getMonth()+1) + (date.getYear()+1900) + "T" + date.getHours() + date.getMinutes() + "0";
+        }
     }
 }
