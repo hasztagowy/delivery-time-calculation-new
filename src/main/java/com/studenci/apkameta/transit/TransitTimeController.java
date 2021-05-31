@@ -33,7 +33,8 @@ public class TransitTimeController {
 
 
     @GetMapping("/{moduleCode}/transitTimes")
-    public List<Date> getCode(@PathVariable("moduleCode") String moduleCode, @RequestParam String serviceName, @RequestParam String pucharseDate){
+    public List<Date> getCode(@PathVariable("moduleCode") String moduleCode, @RequestParam String serviceName,
+                              @RequestParam String pucharseDate, ){
 
         Module module = moduleEntityRepositoryImpl.getModuleByCode(moduleCode);
         Service service = serviceServiceImpl.getServiceByName(serviceName);
@@ -73,27 +74,6 @@ public class TransitTimeController {
 
         List<Date> deliveryDates = new ArrayList<>();
 
-//        while(dispatchTime>0 || transitTime>0 || deliveryTime>0) {
-//            if (availabilityDispatch[date.getDay()] && dispatchTime>0) {
-//                date.setDate(date.getDate()+1);
-//                dispatchTime--;
-//            } else if (availabilityTransit[date.getDay()] && transitTime>0) {
-//                if (transitTime == service.getTransitTimes().get(0).getTransit().getDuration()){
-//                    deliveryDates.add(date);
-//                }
-//                date.setDate(date.getDate()+1);
-//                transitTime--;
-//                if (transitTime == 0){
-//                    deliveryDates.add(date);
-//                }
-//            } else if (availabilityDelivery[date.getDay()] && deliveryTime>0) {
-//                date.setDate(date.getDate()+1);
-//                deliveryTime--;
-//            } else {
-//                date.setDate(date.getDate()+1);
-//            }
-//        }
-
         while (dispatchTime > 0){
             System.out.println("Dispatch time: "+dispatchTime);
             if (availabilityDispatch[date.getDay()] && dispatchTime>0) {
@@ -105,42 +85,30 @@ public class TransitTimeController {
         }
 
         while (transitTime >= 0){
-            System.out.println("Transit time: "+transitTime);
-            System.out.println(availabilityTransit[date.getDay()]);
-            System.out.println(date);
             if (availabilityTransit[date.getDay()] && transitTime>=0) {
-//                if (transitTime == service.getTransitTimes().get(0).getTransit().getDuration()){
-//                    deliveryDates.add(date);
-//                }
+                deliveryDates.add(new Date(date.getYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()));
+                System.out.println(date);
                 date.setDate(date.getDate()+1);
                 transitTime--;
-//                if (transitTime < service.getTransitTimes().get(0).getTransit().getDuration()){
-//                    deliveryDates.add(date);
-//                }
             } else {
                 date.setDate(date.getDate()+1);
             }
         }
 
-//        while (deliveryTime > 0){
-//            if (availabilityDispatch[deliveryDates.get(0).getDay()] && deliveryTime>0) {
-//                date.setDate(date.getDate()+1);
-//                dispatchTime--;
-//            } else {
-//                date.setDate(date.getDate()+1);
-//            }
-//        }
-
-
-//        if(service.getTransitTimes().get(0).getDispatch().)
-
+        for (int i=0; i<deliveryDates.size(); i++){
+            while(deliveryTime > 0){
+                if (availabilityDelivery[deliveryDates.get(i).getDay()] && deliveryTime>0) {
+                    System.out.println(deliveryDates.get(i));
+                    deliveryDates.get(i).setDate(deliveryDates.get(i).getDate()+1);
+                    deliveryTime--;
+                } else {
+                    deliveryDates.get(i).setDate(deliveryDates.get(i).getDate()+1);
+                }
+            }
+            deliveryTime = service.getTransitTimes().get(0).getDelivery().getDuration();
+        }
 
         return deliveryDates;
-//        if (moduleCode.equals("DHL")) {
-//            return "moduleCode is "+module.getCode();
-//        } else if(moduleCode.equals("GLS"))
-//            return "moduleCode is GLS";
-//        return "moduleCode is incorrect";
     }
 
 
