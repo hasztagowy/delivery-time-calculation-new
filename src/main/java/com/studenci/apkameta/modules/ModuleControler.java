@@ -1,10 +1,9 @@
 package com.studenci.apkameta.modules;
 
-import com.studenci.apkameta.users.LoginDto;
-import com.studenci.apkameta.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ModuleControler {
@@ -22,14 +21,14 @@ public class ModuleControler {
 //    }
 
     @GetMapping("/modules")
-    public void helloo(){
+    public List<Module> helloo(){
       //  Module newModule=new Module("kod");
        // moduleEntityRepository.save(newModule);
-        System.out.println("hello");
+//        System.out.println("hello");
+        return moduleEntityRepository.findAll();
     }
 
     @PostMapping("/modules")
-
     String komunkat(@RequestBody Module newModule) {
         moduleEntityRepository.save(newModule);
         return "ok";
