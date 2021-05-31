@@ -1,6 +1,7 @@
 
 package com.studenci.apkameta.Service;
 
+import com.studenci.apkameta.transit.TransitTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,19 @@ public class ServiceServiceImpl{
             }
         }
         return serviceByName;
+    }
+
+    public TransitTime getTransitTimes(String from, String to) {
+        List<com.studenci.apkameta.Service.Service> allServices = serviceService.findAll();
+        TransitTime transitTime = null;
+        for (com.studenci.apkameta.Service.Service allService : allServices) {
+            for (int j = 0; j < allService.getTransitTimes().size(); j++) {
+                if (allService.getTransitTimes().get(j).getFrom().equals(from)
+                        && allService.getTransitTimes().get(j).getTo().equals(to)) {
+                    transitTime = allService.getTransitTimes().get(j);
+                }
+            }
+        }
+        return transitTime;
     }
 }
